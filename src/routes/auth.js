@@ -48,7 +48,7 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, { expiresIn: '30d' });
     res.status(201).json({ token });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '30d' });
     res.json({ token });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
