@@ -16,7 +16,7 @@ const getPrices = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching cryptocurrency prices:', error.message);
+    // console.error('Error fetching cryptocurrency prices:', error.message);
     throw error;
   }
 };

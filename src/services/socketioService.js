@@ -12,9 +12,7 @@ const setupSocketIO = (server) => {
     try {
       const prices = await getPrices();
       emitPriceUpdate(prices);
-    } catch (error) {
-      console.error('Error fetching cryptocurrency prices:', error.message);
-    }
+    } catch (error) {}
   }, 5000);
 };
 

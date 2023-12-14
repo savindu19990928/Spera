@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const router = express.Router();
@@ -16,23 +15,31 @@ router.post('/register', async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new User({ username });
-    await newUser.setPassword(password);
+    const newUser = new User({ username, password });
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully' });
+    const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, { expiresIn: '30d' });
+    res.status(201).json({ token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
+module.exports = router;
+
+
 // User login
-router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+router.post('/login', async (req, res) => {
   try {
-    // Generate JWT upon successful login
-    const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY, { expiresIn: '30d' });
-    
+    const { username, password } = req.body;
+
+    const user = await User.findOne({ username });
+    if (!user || !(await user.validatePassword(password))) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '30d' });
     res.json({ token });
   } catch (error) {
     console.error(error);
