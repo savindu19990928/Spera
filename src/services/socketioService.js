@@ -5,15 +5,17 @@ let io;
 
 // Setup Socket.IO
 const setupSocketIO = (server) => {
-  io = socketIO(server);
+  io = socketIO(server, {
+    cors: { origin: '*' },
+  });
 
-  // Periodically (Every 5 min) emit cryptocurrency price updates
+  // Periodically (Every 5 sec) emit cryptocurrency price updates
   setInterval(async () => {
     try {
       const prices = await getPrices();
       emitPriceUpdate(prices);
     } catch (error) {}
-  }, 300000);
+  }, 5000);
 };
 
 // Emit a price update to all connected clients

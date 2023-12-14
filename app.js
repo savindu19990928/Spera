@@ -10,6 +10,7 @@ const cryptocurrenciesRoutes = require('./src/routes/cryptocurrencies');
 const User = require('./src/models/user');
 const swaggerDoc = require('./src/swagger');
 const { checkPriceAlerts } = require('./src/services/alertService');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ const app = express();
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: '*' }));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
