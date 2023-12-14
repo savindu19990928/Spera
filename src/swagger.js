@@ -4,27 +4,29 @@ const express = require('express');
 
 const doc = express();
 
-// const securitySchemes = {
-//   BearerAuth: {
-//     type: 'http',
-//     in: 'header',
-//     scheme: 'bearer',
-//     bearerFormat: 'JWT',
-//     name: 'Authorization',
-//     description: 'Enter your JWT token in the format "Bearer {token}"',
-//   }
-// };
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Spera Labs CryptoAPI',
+    version: '1.0.0',
+  },
+  security: [{
+    bearerAuth: [],
+  }],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
+};
 
 const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Spera Labs Cryptocurrency API',
-      version: '1.0.0',
-      description: 'API documentation for the Spera Labs Cryptocurrency API',
-    }
-  },
-  apis: ['./src/routes/*.js'], // Path to the API routes
+  swaggerDefinition,
+  apis: ['./src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

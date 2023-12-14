@@ -16,14 +16,6 @@ const authenticate = passport.authenticate('jwt', { session: false });
  *   get:
  *     summary: Get user's favorite cryptocurrencies
  *     tags: [Cryptocurrencies]
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         type: string
- *         required: true
- *         description: JWT token in the format "Bearer {token}"
  *     responses:
  *       200:
  *         description: Successful response with user's favorite cryptocurrencies
@@ -51,14 +43,6 @@ router.get('/favorites', authenticate, async (req, res) => {
  *   post:
  *     summary: Add a cryptocurrency to user's favorites
  *     tags: [Cryptocurrencies]
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         type: string
- *         required: true
- *         description: JWT token in the format "Bearer {token}"
  *     requestBody:
  *       required: true
  *       content:
@@ -114,21 +98,18 @@ router.post('/favorites', authenticate, async (req, res) => {
  * @swagger
  * /cryptocurrencies/favorites/{id}:
  *   delete:
- *     summary: Remove a cryptocurrency from user's favorites
- *     tags: [Cryptocurrencies]
+ *     summary: Remove a cryptocurrency from the user's favorites
+ *     tags: 
+ *       - Cryptocurrencies
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         type: string
- *         required: true
- *         description: JWT token in the format "Bearer {token}"
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID of the cryptocurrency to be removed from favorites
  *     responses:
  *       200:
  *         description: Cryptocurrency removed from favorites successfully
@@ -139,6 +120,7 @@ router.post('/favorites', authenticate, async (req, res) => {
  *       500:
  *         description: Internal Server Error
  */
+
 router.delete('/favorites/:id', authenticate, async (req, res) => {
   try {
     const user = req.user;
@@ -171,11 +153,6 @@ router.delete('/favorites/:id', authenticate, async (req, res) => {
  *     security:
  *       - BearerAuth: []
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         type: string
- *         required: true
- *         description: JWT token in the format "Bearer {token}"
  *       - in: body
  *         name: alert
  *         description: Alert details
@@ -235,12 +212,6 @@ router.post('/alerts', passport.authenticate('jwt', { session: false }), async (
  *     tags: [Cryptocurrencies]
  *     security:
  *       - BearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         type: string
- *         required: true
- *         description: JWT token in the format "Bearer {token}"
  *       - in: path
  *         name: id
  *         required: true
