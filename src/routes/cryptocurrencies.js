@@ -89,7 +89,7 @@ router.post('/favorites', authenticate, async (req, res) => {
     // If not, fetch the price from CoinGecko and create a new entry
     if (!cryptocurrency) {
       const prices = await getPrices();
-      const price = prices[name.toLowerCase()].usd;
+      const price = prices[name.toLowerCase()].lkr;
 
       cryptocurrency = new Cryptocurrency({ name, symbol, price });
       await cryptocurrency.save();
@@ -161,5 +161,130 @@ router.delete('/favorites/:id', authenticate, async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+/**
+ * @swagger
+ * /cryptocurrencies/alerts:
+ *   post:
+ *     summary: Set a price alert for a cryptocurrency
+ *     tags: [Cryptocurrencies]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         type: string
+ *         required: true
+ *         description: JWT token in the format "Bearer {token}"
+ *       - in: body
+ *         name: alert
+ *         description: Alert details
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             cryptocurrencyId:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Price alert set successfully
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       404:
+ *         description: Cryptocurrency not found
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post('/alerts', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const user = req.user;
+    const { cryptocurrencyId } = req.body;
+
+    // Check if the cryptocurrency exists
+    const cryptocurrency = await Cryptocurrency.findById(cryptocurrencyId);
+    if (!cryptocurrency) {
+      return res.status(404).json({ message: 'Cryptocurrency not found' });
+    }
+
+    // Check if the user already has an alert for this cryptocurrency
+    const existingAlert = user.alerts.find(alert => alert.cryptocurrency.equals(cryptocurrencyId));
+    if (existingAlert) {
+      return res.status(400).json({ message: 'Alert for this cryptocurrency already exists' });
+    }
+
+    // Add the alert to the user's alerts
+    user.alerts.push({ cryptocurrency: cryptocurrencyId });
+    await user.save();
+
+    // Add the user to the cryptocurrency's usersWithAlerts
+    cryptocurrency.usersWithAlerts.push(user._id);
+    await cryptocurrency.save();
+
+    res.status(201).json({ message: 'Price alert set successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @swagger
+ * /cryptocurrencies/alerts/{id}:
+ *   delete:
+ *     summary: Remove a price alert for a cryptocurrency
+ *     tags: [Cryptocurrencies]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         type: string
+ *         required: true
+ *         description: JWT token in the format "Bearer {token}"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Price alert removed successfully
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       404:
+ *         description: Cryptocurrency or alert not found
+ *       500:
+ *         description: Internal Server Error
+ */
+router.delete('/alerts/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const user = req.user;
+    const alertId = req.params.id;
+
+    // Find the alert in the user's alerts
+    const alertIndex = user.alerts.findIndex(alert => alert._id.equals(alertId));
+
+    // If found, remove it from the array
+    if (alertIndex !== -1) {
+      const cryptocurrencyId = user.alerts[alertIndex].cryptocurrency;
+
+      // Remove the user from the cryptocurrency's usersWithAlerts
+      await Cryptocurrency.findByIdAndUpdate(cryptocurrencyId, {
+        $pull: { usersWithAlerts: user._id },
+      });
+
+      user.alerts.splice(alertIndex, 1);
+      await user.save();
+
+      res.json({ message: 'Price alert removed successfully' });
+    } else {
+      res.status(404).json({ message: 'Alert not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 module.exports = router;

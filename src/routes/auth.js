@@ -19,6 +19,8 @@ const router = express.Router();
  *             properties:
  *               username:
  *                 type: string
+ *               email:
+ *                 type: string
  *               password:
  *                 type: string
  *     responses:
@@ -31,7 +33,7 @@ const router = express.Router();
  */
 router.post('/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     // Check if the username is already taken
     const existingUser = await User.findOne({ username });
@@ -40,7 +42,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new User({ username, password });
+    const newUser = new User({ username, email, password });
     await newUser.save();
 
     const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, { expiresIn: '30d' });

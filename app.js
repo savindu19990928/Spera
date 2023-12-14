@@ -9,6 +9,7 @@ const authRoutes = require('./src/routes/auth');
 const cryptocurrenciesRoutes = require('./src/routes/cryptocurrencies');
 const User = require('./src/models/user');
 const swaggerDoc = require('./src/swagger');
+const { checkPriceAlerts } = require('./src/services/alertService');
 
 dotenv.config();
 
@@ -49,6 +50,9 @@ passport.use(
 app.use('/auth', authRoutes);
 app.use('/cryptocurrencies', cryptocurrenciesRoutes);
 app.use('/', swaggerDoc);
+
+// Price alerts checker
+checkPriceAlerts();
 
 // Start Socket.IO
 setupSocketIO(server);

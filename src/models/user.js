@@ -3,8 +3,14 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   username: String,
-  password: String, // The hashed password
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cryptocurrency' }]
+  email: String,
+  password: String,
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cryptocurrency' }],
+  alerts: [
+    {
+      cryptocurrency: { type: mongoose.Schema.Types.ObjectId, ref: 'Cryptocurrency' }
+    },
+  ],
 });
 
 // Hash the password before saving it to the database

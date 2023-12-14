@@ -1,5 +1,5 @@
 const socketIO = require('socket.io');
-const { getPrices } = require('./coinGeckoService'); // Import the CoinGecko service
+const { getPrices } = require('./coinGeckoService');
 
 let io;
 
