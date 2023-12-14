@@ -10,6 +10,28 @@ const Cryptocurrency = require('../models/cryptocurrency');
 const authenticate = passport.authenticate('jwt', { session: false });
 
 // Get user's favorite cryptocurrencies
+/**
+ * @swagger
+ * /cryptocurrencies/favorites:
+ *   get:
+ *     summary: Get user's favorite cryptocurrencies
+ *     tags: [Cryptocurrencies]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         type: string
+ *         required: true
+ *         description: JWT token in the format "Bearer {token}"
+ *     responses:
+ *       200:
+ *         description: Successful response with user's favorite cryptocurrencies
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/favorites', authenticate, async (req, res) => {
   try {
     const user = req.user;
@@ -23,6 +45,39 @@ router.get('/favorites', authenticate, async (req, res) => {
 });
 
 // Add a cryptocurrency to the user's favorites
+/**
+ * @swagger
+ * /cryptocurrencies/favorites:
+ *   post:
+ *     summary: Add a cryptocurrency to user's favorites
+ *     tags: [Cryptocurrencies]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         type: string
+ *         required: true
+ *         description: JWT token in the format "Bearer {token}"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               symbol:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Cryptocurrency added to favorites successfully
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/favorites', authenticate, async (req, res) => {
   try {
     const user = req.user;
@@ -55,6 +110,35 @@ router.post('/favorites', authenticate, async (req, res) => {
 });
 
 // Delete a cryptocurrency from the user's favorites
+/**
+ * @swagger
+ * /cryptocurrencies/favorites/{id}:
+ *   delete:
+ *     summary: Remove a cryptocurrency from user's favorites
+ *     tags: [Cryptocurrencies]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         type: string
+ *         required: true
+ *         description: JWT token in the format "Bearer {token}"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Cryptocurrency removed from favorites successfully
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       404:
+ *         description: Cryptocurrency not found in favorites
+ *       500:
+ *         description: Internal Server Error
+ */
 router.delete('/favorites/:id', authenticate, async (req, res) => {
   try {
     const user = req.user;

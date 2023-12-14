@@ -4,6 +4,31 @@ const User = require('../models/user');
 const router = express.Router();
 
 // User registration
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Bad request - Invalid input data
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -30,6 +55,31 @@ module.exports = router;
 
 
 // User login
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Log in an existing user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *       401:
+ *         description: Unauthorized - Invalid username or password
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;

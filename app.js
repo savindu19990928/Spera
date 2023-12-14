@@ -8,6 +8,7 @@ const { setupSocketIO } = require('./src/services/socketioService');
 const authRoutes = require('./src/routes/auth');
 const cryptocurrenciesRoutes = require('./src/routes/cryptocurrencies');
 const User = require('./src/models/user');
+const swaggerDoc = require('./src/swagger');
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ passport.use(
 // Routes
 app.use('/auth', authRoutes);
 app.use('/cryptocurrencies', cryptocurrenciesRoutes);
+app.use('/', swaggerDoc);
 
 // Start Socket.IO
 setupSocketIO(server);
