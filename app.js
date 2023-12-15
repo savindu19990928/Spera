@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI);
 
 // Middleware
 app.use(express.json());
@@ -62,5 +62,9 @@ setupSocketIO(server);
 
 // Start the server
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  }
 });
+
+module.exports = app;

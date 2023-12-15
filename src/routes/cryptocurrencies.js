@@ -69,7 +69,6 @@ router.post('/favorites', authenticate, async (req, res) => {
 
     // Check if the cryptocurrency exists in the database
     let cryptocurrency = await Cryptocurrency.findOne({ name, symbol });
-
     // If not, fetch the price from CoinGecko and create a new entry
     if (!cryptocurrency) {
       const prices = await getPrices();
@@ -83,10 +82,9 @@ router.post('/favorites', authenticate, async (req, res) => {
     user.favorites.push(cryptocurrency);
     await user.save();
 
-    // Emit real-time update to connected clients
-    emitPriceUpdate({ name, symbol, price: cryptocurrency.price });
+    const cryptoData = await Cryptocurrency.findOne({ name, symbol });
 
-    res.status(201).json({ message: 'Cryptocurrency added to favorites successfully' });
+    res.status(201).json({ message: 'Cryptocurrency added to favorites successfully', capturedID: cryptoData.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
