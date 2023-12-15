@@ -78,6 +78,13 @@ router.post('/favorites', authenticate, async (req, res) => {
       await cryptocurrency.save();
     }
 
+    // Check if the cryptocurrency already exists in the user's favorites
+    const existingFavorite = user.favorites.find(favorite => favorite.name === name && favorite.symbol === symbol)
+    
+    if (existingFavorite) {
+      return res.status(400).json({ message: 'Cryptocurrency is already in favorites' });
+    }
+
     // Add the cryptocurrency to the user's favorites
     user.favorites.push(cryptocurrency);
     await user.save();
