@@ -69,6 +69,7 @@ router.post('/favorites', authenticate, async (req, res) => {
 
     // Check if the cryptocurrency exists in the database
     let cryptocurrency = await Cryptocurrency.findOne({ name, symbol });
+
     // If not, fetch the price from CoinGecko and create a new entry
     if (!cryptocurrency) {
       const prices = await getPrices();
@@ -79,8 +80,10 @@ router.post('/favorites', authenticate, async (req, res) => {
     }
 
     // Check if the cryptocurrency already exists in the user's favorites
-    const existingFavorite = user.favorites.find(favorite => favorite.name === name && favorite.symbol === symbol)
-    
+    const existingFavorite = await User.findOne(
+      { _id: user, favorites: { $in: [cryptocurrency.id] } }
+    );
+
     if (existingFavorite) {
       return res.status(400).json({ message: 'Cryptocurrency is already in favorites' });
     }
