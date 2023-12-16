@@ -1,3 +1,5 @@
+localhost:3000/doc is the api documentation
+
 Please provide valid email to get email alerts
 
 Run npm test to test program
