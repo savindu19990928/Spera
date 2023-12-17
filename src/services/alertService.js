@@ -1,6 +1,9 @@
 const User = require('../models/user');
 const { sendEmail } = require('./notificationService');
 const { getPrices } = require('./coinGeckoService');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 async function checkPriceAlerts() {
   try {
@@ -23,6 +26,6 @@ async function checkPriceAlerts() {
   }
 }
 
-setInterval(checkPriceAlerts, 86400000); // Send email every day
+setInterval(checkPriceAlerts, process.env.ALERT_PERIOD);
 
 module.exports = { checkPriceAlerts };
