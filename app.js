@@ -63,7 +63,7 @@ setupSocketIO(server);
 // Start the server
 server.listen(PORT, () => {
   if (process.env.NODE_ENV !== 'test') {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`API documentation is running on http://localhost:${PORT}/doc`);
   }
 });
 
