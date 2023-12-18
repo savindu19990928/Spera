@@ -1,3 +1,7 @@
+Please provide MongoDB URI, E-mail, Google Oauth2 client id, Google Oauth2 client secret, Google Oauth2 refresh token before run the server
+
+MongoDB URI is important but if you are not using alert service then other environment variables aren't needed
+
 localhost:3000/doc is the api documentation
 
 Please provide valid email to get email alerts
