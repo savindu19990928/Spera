@@ -34,7 +34,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmail(to, subject, message) {
   const mailOptions = {
-    from: 'devriousteam@gmail.com',
+    from: 'info@devrious.lk',
     to : to,
     subject : subject,
     text: message
