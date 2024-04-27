@@ -7,7 +7,7 @@ const doc = express();
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'Crypto Labs CryptoAPI',
+    title: 'Crypto Labs Crypto API',
     version: '1.0.0',
   },
   security: [{
