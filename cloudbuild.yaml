@@ -1,0 +1,28 @@
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-t', 'europe-west1-docker.pkg.dev/chrome-mediator-459217-f3/cloud-run-source-deploy/spera', 
+      '.'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push', 
+      'europe-west1-docker.pkg.dev/chrome-mediator-459217-f3/cloud-run-source-deploy/spera'
+    ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'spera',
+        '--image', 'europe-west1-docker.pkg.dev/chrome-mediator-459217-f3/cloud-run-source-deploy/spera',
+        '--region', 'europe-west1',
+        '--platform', 'managed',
+        '--allow-unauthenticated',
+        '--quiet'
+      ]
