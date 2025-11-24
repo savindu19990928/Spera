@@ -8,7 +8,9 @@
     "test": "jest"
   },
   "jest": {
-    "setupFiles": ["./tests/jest.setup.js"]
+    "setupFiles": [
+      "./tests/jest.setup.js"
+    ]
   },
   "author": "Savindu",
   "license": "ISC",
@@ -22,7 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-simple": "^0.5.6",
     "mongoose": "^8.0.3",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^7.0.10",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "socket.io": "^4.7.2",
